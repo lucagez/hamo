@@ -22,6 +22,8 @@ function on(when, func) {
     func
   ];
 
+  // rebuilding the handler on every on / off call
+  // => Always use the most optimized function.
   this.handler = this.build();
 }
 
@@ -140,10 +142,10 @@ const hamo = (func) => {
 
   // Returning the handler function and the `on` / `off` modifiers
   return [
-    (...args) => state.handler(...args),
+    function (...args) { return state.handler(...args) },
     on.bind(state),
     off.bind(state),
   ];
 }
 
-export default hamo;
+module.exports = hamo;

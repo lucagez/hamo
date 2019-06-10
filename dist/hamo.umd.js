@@ -1,7 +1,7 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global.hamo = factory());
+  (factory());
 }(this, (function () {
   /**
    * Internal function that execute every function in an array passing
@@ -28,7 +28,9 @@
 
 
   function on(when, func) {
-    this.queues[when] = (this.queues[when] || []).concat( [func]);
+    this.queues[when] = (this.queues[when] || []).concat( [func]); // rebuilding the handler on every on / off call
+    // => Always use the most optimized function.
+
     this.handler = this.build();
   }
   /**
@@ -51,13 +53,15 @@
    * passed.
    * The function is built on each hook/dehook.
    * 
-   * NOTE: because of scheduled micro-task, the flow of the resulting function is:
+   * NOTE1: because of scheduled micro-task, the flow of the resulting function is:
    * 1. ONCE BEFORE
    * 2. BEFORE
    * 3. MIDDLE (hooked function)
    * 4. return result of the hooked function
    * 5. ONCE AFTER
    * 6. AFTER
+   * 
+   * NOTE2: The `this` keyword inside build is referring to `state` object.
    */
 
 
@@ -148,14 +152,11 @@
     }; // Returning the handler function and the `on` / `off` modifiers
 
     return [function () {
-      var args = [], len = arguments.length;
-      while ( len-- ) args[ len ] = arguments[ len ];
-
       return state.handler.apply(state, args);
     }, on.bind(state), off.bind(state)];
   };
 
-  return hamo;
+  module.exports = hamo;
 
 })));
 //# sourceMappingURL=hamo.umd.js.map

@@ -4,8 +4,7 @@
   "description": "",
   "main": "dist/hamo.js",
   "scripts": {
-    "build": "microbundle src/hamo.mjs --no-sourcemap",
-    "build:dev": "microbundle watch src/hamo.mjs --no-compress",
+    "build": "uglifyjs --compress --mangle -- src/hamo.js > dist/hamo.js && gzip-size dist/hamo.js",
     "scratch": "nodemon scratch/test.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,7 +13,12 @@
   "license": "ISC",
   "devDependencies": {
     "benchmark": "^2.1.4",
-    "microbundle": "^0.11.0",
-    "nodemon": "^1.19.1"
+    "gzip-size-cli": "^3.0.0",
+    "nodemon": "^1.19.1",
+    "uglify-es": "^3.3.9",
+    "uglify-js": "^3.6.0"
+  },
+  "dependencies": {
+    "remove": "^0.1.5"
   }
 }
