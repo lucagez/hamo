@@ -4,7 +4,9 @@
   "description": "",
   "main": "dist/hamo.js",
   "scripts": {
-    "build": "uglifyjs --compress --mangle -- src/hamo.js > dist/hamo.js && gzip-size dist/hamo.js",
+    "build:node": "uglifyjs --compress --mangle -- src/hamo.js > dist/hamo.js && gzip-size dist/hamo.js",
+    "build:web": "microbundle src/hamo.js --target web --no-sourcemap --format umd",
+    "build": "npm run build:node && npm run build:web",
     "scratch": "nodemon scratch/test.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,6 +16,7 @@
   "devDependencies": {
     "benchmark": "^2.1.4",
     "gzip-size-cli": "^3.0.0",
+    "microbundle": "^0.11.0",
     "nodemon": "^1.19.1",
     "uglify-es": "^3.3.9",
     "uglify-js": "^3.6.0"

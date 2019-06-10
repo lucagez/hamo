@@ -114,8 +114,8 @@ function build() {
 }
 
 /**
- * Hamo, it's latin for `hook`.
- * 
+ * Hāmo, from latin. `hooked`.
+ * ZERO overhead hooks for every function.
  * @param {function} func 
  */
 const hamo = (func) => {
@@ -142,7 +142,7 @@ const hamo = (func) => {
 
   // Returning the handler function and the `on` / `off` modifiers
   return [
-    function (...args) { return state.handler(...args) },
+    (...args) => state.handler(...args),
     on.bind(state),
     off.bind(state),
   ];
