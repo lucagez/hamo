@@ -45,6 +45,14 @@ function off(when) {
  * If `any` is FALSE (meaning no hooks used) => the normal function is
  * passed.
  * The function is built on each hook/dehook.
+ * 
+ * NOTE: because of scheduled micro-task, the flow of the resulting function is:
+ * 1. ONCE BEFORE
+ * 2. BEFORE
+ * 3. MIDDLE (hooked function)
+ * 4. return result of the hooked function
+ * 5. ONCE AFTER
+ * 6. AFTER
  */
 
 
