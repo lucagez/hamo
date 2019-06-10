@@ -138,7 +138,8 @@ function hamo(func) {
   this.handler = this.func; // Dynamically build the body of the handler function.
 
   this.build = build.bind(this);
-  this.every = every.bind(this);
+  this.every = every.bind(this); // Returning the handler function and the `on` / `off` modifiers
+
   return [function () {
     var ref;
 
@@ -146,7 +147,7 @@ function hamo(func) {
     while ( len-- ) args[ len ] = arguments[ len ];
     return (ref = this$1).handler.apply(ref, args);
   }, on, off];
-}
+} // class Hamo {
 
 module.exports = hamo;
 //# sourceMappingURL=hamo.js.map

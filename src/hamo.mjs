@@ -132,6 +132,7 @@ function hamo(func) {
   this.build = build.bind(this);
   this.every = every.bind(this);
 
+  // Returning the handler function and the `on` / `off` modifiers
   return [
     (...args) => this.handler(...args),
     on,
@@ -139,5 +140,32 @@ function hamo(func) {
   ];
 }
 
+// class Hamo {
+//   constructor(func) {
+//     this.queues = {};
+  
+//     // Hooked function
+//     this.func = func;
+  
+//     // Dyanmically builded handler.
+//     // Hamo starts using the provided function as the
+//     // used handler => start with no overhead.
+//     // Adding overhead only if hooks are defined.
+//     // If all queues are cleared at any point in time, the handler will
+//     // be the original function again.
+//     this.handler = this.func;
+  
+//     // Dynamically build the body of the handler function.
+//     this.build = build.bind(this);
+//     this.every = every.bind(this);
+  
+//     // Returning the handler function and the `on` / `off` modifiers
+//     return [
+//       (...args) => this.handler(...args),
+//       on.bind(this),
+//       off.bind(this),
+//     ];
+//   }
+// }
 
 export default hamo;
