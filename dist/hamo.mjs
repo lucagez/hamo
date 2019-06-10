@@ -123,31 +123,32 @@ function build() {
  */
 
 
-function hamo(func) {
-  var this$1 = this;
-
-  this.queues = {}; // Hooked function
-
-  this.func = func; // Dyanmically builded handler.
-  // Hamo starts using the provided function as the
-  // used handler => start with no overhead.
-  // Adding overhead only if hooks are defined.
-  // If all queues are cleared at any point in time, the handler will
-  // be the original function again.
-
-  this.handler = this.func; // Dynamically build the body of the handler function.
-
-  this.build = build.bind(this);
-  this.every = every.bind(this); // Returning the handler function and the `on` / `off` modifiers
+var hamo = function (func) {
+  var state = {
+    // stored queues
+    queues: {},
+    // Hooked function
+    func: func,
+    // Dyanmically builded handler.
+    // Hamo starts using the provided function as the
+    // used handler => start with no overhead.
+    // Adding overhead only if hooks are defined.
+    // If all queues are cleared at any point in time, the handler will
+    // be the original function again.
+    handler: func,
+    // Dynamically build the body of the handler function.
+    build: build,
+    // Utility to call an array of function with the same set of arguments
+    every: every
+  }; // Returning the handler function and the `on` / `off` modifiers
 
   return [function () {
-    var ref;
-
     var args = [], len = arguments.length;
     while ( len-- ) args[ len ] = arguments[ len ];
-    return (ref = this$1).handler.apply(ref, args);
-  }, on, off];
-} // class Hamo {
+
+    return state.handler.apply(state, args);
+  }, on.bind(state), off.bind(state)];
+};
 
 export default hamo;
 //# sourceMappingURL=hamo.mjs.map

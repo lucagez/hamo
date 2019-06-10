@@ -114,58 +114,34 @@ function build() {
  * 
  * @param {function} func 
  */
-function hamo(func) {
-  this.queues = {};
+const hamo = (func) => {
+  const state = {
+    // stored queues
+    queues: {},
 
-  // Hooked function
-  this.func = func;
+    // Hooked function
+    func,
+    // Dyanmically builded handler.
+    // Hamo starts using the provided function as the
+    // used handler => start with no overhead.
+    // Adding overhead only if hooks are defined.
+    // If all queues are cleared at any point in time, the handler will
+    // be the original function again.
+    handler: func,
 
-  // Dyanmically builded handler.
-  // Hamo starts using the provided function as the
-  // used handler => start with no overhead.
-  // Adding overhead only if hooks are defined.
-  // If all queues are cleared at any point in time, the handler will
-  // be the original function again.
-  this.handler = this.func;
+    // Dynamically build the body of the handler function.
+    build,
 
-  // Dynamically build the body of the handler function.
-  this.build = build.bind(this);
-  this.every = every.bind(this);
+    // Utility to call an array of function with the same set of arguments
+    every,
+  };
 
   // Returning the handler function and the `on` / `off` modifiers
   return [
-    (...args) => this.handler(...args),
-    on,
-    off,
+    (...args) => state.handler(...args),
+    on.bind(state),
+    off.bind(state),
   ];
 }
-
-// class Hamo {
-//   constructor(func) {
-//     this.queues = {};
-  
-//     // Hooked function
-//     this.func = func;
-  
-//     // Dyanmically builded handler.
-//     // Hamo starts using the provided function as the
-//     // used handler => start with no overhead.
-//     // Adding overhead only if hooks are defined.
-//     // If all queues are cleared at any point in time, the handler will
-//     // be the original function again.
-//     this.handler = this.func;
-  
-//     // Dynamically build the body of the handler function.
-//     this.build = build.bind(this);
-//     this.every = every.bind(this);
-  
-//     // Returning the handler function and the `on` / `off` modifiers
-//     return [
-//       (...args) => this.handler(...args),
-//       on.bind(this),
-//       off.bind(this),
-//     ];
-//   }
-// }
 
 export default hamo;
