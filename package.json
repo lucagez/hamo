@@ -7,6 +7,8 @@
     "build:node": "uglifyjs --compress --mangle -- src/hamo.js > dist/hamo.js && gzip-size dist/hamo.js",
     "build:web": "microbundle src/hamo.js --target web --no-sourcemap --format umd",
     "build": "npm run build:node && npm run build:web",
+    "lint": "eslint src/*.js",
+    "lint:fix": "eslint --fix src/*.js",
     "scratch": "nodemon scratch/test.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,11 +16,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "ava": "^2.1.0",
     "benchmark": "^2.1.4",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.3",
     "gzip-size-cli": "^3.0.0",
     "microbundle": "^0.11.0",
     "nodemon": "^1.19.1",
     "uglify-es": "^3.3.9"
-  },
-  "dependencies": {}
+  }
 }

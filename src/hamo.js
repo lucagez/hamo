@@ -1,7 +1,7 @@
 /**
  * Internal function that execute every function in an array passing
  * the same set of arguments.
- * @param {array} funcs - array of function that needs to be executed 
+ * @param {array} funcs - array of function that needs to be executed
  * @param  {any} args - arguments passed to array funcs
  */
 const every = (funcs = [], ...args) => {
@@ -33,19 +33,19 @@ function validator(...args) {
 
 /**
  * Concatenating function to be used on defined hook.
- * @param {string} when - one of `before`, `after`, `oncebefore`, `onceafter` 
- * @param {function} func 
+ * @param {string} when - one of `before`, `after`, `oncebefore`, `onceafter`
+ * @param {function} func
  */
 function on(when, func) {
   this.queues[when] = [
     ...this.queues[when] || [],
-    func
+    func,
   ];
 }
 
 /**
  * Clear hook's queue relative to passed `when`.
- * @param {string} when - one of `before`, `after`, `oncebefore`, `onceafter` 
+ * @param {string} when - one of `before`, `after`, `oncebefore`, `onceafter`
  */
 function off(when) {
   this.queues[when] = undefined;
@@ -54,7 +54,7 @@ function off(when) {
 /**
  * Wrapping on/off functionality with validation and handler rebuilding on
  * each invocation.
- * @param {function} action - `on` or `off` 
+ * @param {function} action - `on` or `off`
  */
 function wrap(action) {
   return function (...args) {
@@ -64,7 +64,7 @@ function wrap(action) {
     // Rebuilding the used handler on every on/off invocation.
     // => Using only the strictly needed pieces.
     this.handler = build.apply(this);
-  }
+  };
 }
 
 /**
@@ -76,7 +76,7 @@ function wrap(action) {
  * If `any` is FALSE (meaning no hooks used) => the normal function is
  * passed.
  * The function is built on each hook/dehook.
- * 
+ *
  * NOTE1: because of scheduled micro-task, the flow of the resulting function is:
  * 1. ONCE BEFORE
  * 2. BEFORE
@@ -84,12 +84,14 @@ function wrap(action) {
  * 4. return result of the hooked function
  * 5. ONCE AFTER
  * 6. AFTER
- * 
+ *
  * NOTE2: The `this` keyword inside build is referring to `state` object.
  */
 function build() {
   // QUEUES
-  const { before, oncebefore, after, onceafter } = this.queues;
+  const {
+    before, oncebefore, after, onceafter,
+  } = this.queues;
 
   const any = oncebefore || before || after || onceafter;
 
@@ -99,12 +101,12 @@ function build() {
    * BEFORE
    */
   if (oncebefore) {
-    body += `this.every(this.queues.oncebefore, ...arguments);`;
-    body += `this.queues.oncebefore = undefined;`;
+    body += 'this.every(this.queues.oncebefore, ...arguments);';
+    body += 'this.queues.oncebefore = undefined;';
   }
 
   if (before) {
-    body += `this.every(this.queues.before, ...arguments);`;
+    body += 'this.every(this.queues.before, ...arguments);';
   }
 
   /**
@@ -112,32 +114,32 @@ function build() {
    * Executing actual function after the `before` queue.
    */
   if (any) {
-    body += `const result = this.func(...arguments);`;
+    body += 'const result = this.func(...arguments);';
   }
 
   /**
    * AFTER
    * (microtask executed on nextTick)
    * NOTE: using Promise for browser compatibility, as process.nextTick
-   * is about 20% faster. 
+   * is about 20% faster.
    */
   if (after || onceafter) {
-    body += `Promise.resolve().then(() => {`;
+    body += 'Promise.resolve().then(() => {';
     if (onceafter) {
-      body += `this.every(this.queues.onceafter, result, ...arguments);`;
-      body += `this.queues.onceafter = undefined;`;
+      body += 'this.every(this.queues.onceafter, result, ...arguments);';
+      body += 'this.queues.onceafter = undefined;';
     }
     if (after) {
-      body += `this.every(this.queues.after, result, ...arguments);`;
+      body += 'this.every(this.queues.after, result, ...arguments);';
     }
-    body += `});`;
+    body += '});';
   }
 
   if (any) {
-    body += `return result;`;
+    body += 'return result;';
   }
 
-  // Adding conditions to keep using original function 
+  // Adding conditions to keep using original function
   // when there are no defined hooks.
   return body.length > 0
     ? new Function(body)
@@ -147,13 +149,13 @@ function build() {
 /**
  * Hāmo, from latin. `hooked`.
  * ZERO overhead hooks for every function.
- * 
+ *
  * Supported hooks:
  * - `before`
  * - `after`
  * - `oncebefore`
- * - `onceafter` 
- * @param {function} func 
+ * - `onceafter`
+ * @param {function} func
  */
 const hamo = (func) => {
   if (typeof func !== 'function') throw new TypeError('Hooked must be of type function');
@@ -186,6 +188,6 @@ const hamo = (func) => {
     wrap(on).bind(state),
     wrap(off).bind(state),
   ];
-}
+};
 
 module.exports = hamo;
