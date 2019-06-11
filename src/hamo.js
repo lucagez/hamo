@@ -11,12 +11,27 @@ const every = (funcs = [], ...args) => {
   }
 };
 
+function validator(...args) {
+  // Using args to reuse validator on both handlers.
+  // args[0] is always `when`
+  // args[1], when invoking `on`, is a function.
+  if (['oncebefore', 'before', 'after', 'onceafter'].indexOf(args[0]) < 0) {
+    throw new Error(`Undefined timing ${args[0]}`);
+  }
+
+  if (args[1] && typeof args[1] !== 'function') {
+    throw new TypeError('Hook must be of type function');
+  }
+}
+
 /**
  * Concatenating function to be used on defined hook.
  * @param {string} when - one of `before`, `after`, `oncebefore`, `onceafter` 
  * @param {function} func 
  */
 function on(when, func) {
+  validator(when, func);
+
   this.queues[when] = [
     ...this.queues[when] || [],
     func
@@ -32,6 +47,8 @@ function on(when, func) {
  * @param {string} when - one of `before`, `after`, `oncebefore`, `onceafter` 
  */
 function off(when) {
+  validator(when);
+  
   this.queues[when] = undefined;
 
   this.handler = this.build();
@@ -125,6 +142,7 @@ const hamo = (func) => {
 
     // Hooked function
     func,
+    
     // Dyanmically builded handler.
     // Hamo starts using the provided function as the
     // used handler => start with no overhead.
