@@ -10,7 +10,7 @@
     "lint": "eslint src/*.js",
     "lint:fix": "eslint --fix src/*.js",
     "scratch": "nodemon scratch/test.js",
-    "test": "ava test/**"
+    "test": "npm run build && ava test/**"
   },
   "keywords": [],
   "author": "",
