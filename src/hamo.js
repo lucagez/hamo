@@ -7,7 +7,7 @@
 const every = (funcs = [], ...args) => {
   const { length } = funcs;
   for (let i = 0; i < length; i++) {
-    funcs[i](...args);
+    new Promise(() => funcs[i](...args));
   }
 };
 
