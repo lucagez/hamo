@@ -7,6 +7,8 @@
 const every = (funcs = [], ...args) => {
   const { length } = funcs;
   for (let i = 0; i < length; i++) {
+    // Wrapping execution in promise to avoid blocking
+    // the hook queue.
     new Promise(() => funcs[i](...args));
   }
 };
@@ -59,8 +61,11 @@ function off(when) {
 function wrap(action) {
   return function(...args) {
     validator(...args);
-    action.bind(this)(...args);
-    this.handler = this.build();
+    action.apply(this, args);
+
+    // Rebuilding the used handler on every on/off invocation.
+    // => Using only the strictly needed pieces.
+    this.handler = build.apply(this);
   }
 }
 
@@ -153,6 +158,8 @@ function build() {
  * @param {function} func 
  */
 const hamo = (func) => {
+  if (typeof func !== 'function') throw new TypeError('Hooked must be of type function');
+  
   const state = {
     // stored queues
     queues: {},
