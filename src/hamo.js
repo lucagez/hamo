@@ -52,22 +52,6 @@ function off(when) {
 }
 
 /**
- * Wrapping on/off functionality with validation and handler rebuilding on
- * each invocation.
- * @param {function} action - `on` or `off`
- */
-function wrap(action) {
-  return function (...args) {
-    validator(...args);
-    action.apply(this, args);
-
-    // Rebuilding the used handler on every on/off invocation.
-    // => Using only the strictly needed pieces.
-    this.handler = build.apply(this);
-  };
-}
-
-/**
  * Dynamically buiilding the body of the handler.
  * Building this optimized function lead to 100x performance improvement
  * against an already defined handler with if statements.
@@ -144,6 +128,22 @@ function build() {
   return body.length > 0
     ? new Function(body)
     : this.func;
+}
+
+/**
+ * Wrapping on/off functionality with validation and handler rebuilding on
+ * each invocation.
+ * @param {function} action - `on` or `off`
+ */
+function wrap(action) {
+  return function (...args) {
+    validator(...args);
+    action.apply(this, args);
+
+    // Rebuilding the used handler on every on/off invocation.
+    // => Using only the strictly needed pieces.
+    this.handler = build.apply(this);
+  };
 }
 
 /**
