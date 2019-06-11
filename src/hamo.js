@@ -11,6 +11,13 @@ const every = (funcs = [], ...args) => {
   }
 };
 
+/**
+ * Check if the passed arguments are supported by Hamo.
+ * Technically every string could be added as queue.
+ * However, the `build` function only supports the invocation
+ * of `oncebefore`, `before`, `after`, `onceafter`.
+ * @param  {...any} args - both `when` and `func`
+ */
 function validator(...args) {
   // Using args to reuse validator on both handlers.
   // args[0] is always `when`
@@ -30,16 +37,10 @@ function validator(...args) {
  * @param {function} func 
  */
 function on(when, func) {
-  validator(when, func);
-
   this.queues[when] = [
     ...this.queues[when] || [],
     func
   ];
-
-  // rebuilding the handler on every on / off call
-  // => Always use the most optimized function.
-  this.handler = this.build();
 }
 
 /**
@@ -47,11 +48,20 @@ function on(when, func) {
  * @param {string} when - one of `before`, `after`, `oncebefore`, `onceafter` 
  */
 function off(when) {
-  validator(when);
-  
   this.queues[when] = undefined;
+}
 
-  this.handler = this.build();
+/**
+ * Wrapping on/off functionality with validation and handler rebuilding on
+ * each invocation.
+ * @param {function} action - `on` or `off` 
+ */
+function wrap(action) {
+  return function(...args) {
+    validator(...args);
+    action.bind(this)(...args);
+    this.handler = this.build();
+  }
 }
 
 /**
@@ -105,7 +115,8 @@ function build() {
   /**
    * AFTER
    * (microtask executed on nextTick)
-   * NOTE: using Promise for browser compatibility.
+   * NOTE: using Promise for browser compatibility, as process.nextTick
+   * is about 20% faster. 
    */
   if (after || onceafter) {
     body += `Promise.resolve().then(() => {`;
@@ -133,6 +144,12 @@ function build() {
 /**
  * Hāmo, from latin. `hooked`.
  * ZERO overhead hooks for every function.
+ * 
+ * Supported hooks:
+ * - `before`
+ * - `after`
+ * - `oncebefore`
+ * - `onceafter` 
  * @param {function} func 
  */
 const hamo = (func) => {
@@ -142,7 +159,7 @@ const hamo = (func) => {
 
     // Hooked function
     func,
-    
+
     // Dyanmically builded handler.
     // Hamo starts using the provided function as the
     // used handler => start with no overhead.
@@ -161,8 +178,8 @@ const hamo = (func) => {
   // Returning the handler function and the `on` / `off` modifiers
   return [
     (...args) => state.handler(...args),
-    on.bind(state),
-    off.bind(state),
+    wrap(on).bind(state),
+    wrap(off).bind(state),
   ];
 }
 
