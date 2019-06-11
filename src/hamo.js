@@ -79,7 +79,8 @@ function build() {
 
   const any = oncebefore || before || after || onceafter;
 
-  let body = '';
+  // This small change will add suport for async functions
+  let body = `(${this.async ? 'async ' : ''}function handler() {`;
 
   /**
    * BEFORE
@@ -98,7 +99,7 @@ function build() {
    * Executing actual function after the `before` queue.
    */
   if (any) {
-    body += 'const result = this.func(...arguments);';
+    body += `const result = ${this.async ? 'await ' : ''}this.func(...arguments);`;
   }
 
   /**
@@ -126,10 +127,12 @@ function build() {
     body += 'return result;';
   }
 
+  body += '})';
+
   // Adding conditions to keep using original function
   // when there are no defined hooks.
   return body.length > 0
-    ? new Function(body)
+    ? eval(body)
     : this.func;
 }
 
@@ -160,7 +163,7 @@ function wrap(action) {
  * - `onceafter`
  * @param {function} func
  */
-const hamo = (func) => {
+const hamo = (func, async = false) => {
   if (typeof func !== 'function') throw new TypeError('Hooked must be of type function');
 
   const state = {
@@ -169,6 +172,9 @@ const hamo = (func) => {
 
     // Hooked function
     func,
+
+    // Define async behavior of builded function
+    async,
 
     // Dyanmically builded handler.
     // Hamo starts using the provided function as the
