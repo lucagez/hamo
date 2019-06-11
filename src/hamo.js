@@ -2,7 +2,7 @@
  * Internal function that execute every function in an array passing
  * the same set of arguments.
  * @param {array} funcs - array of function that needs to be executed
- * @param  {any} args - arguments passed to array funcs
+ * @param {...any} args - arguments passed to array funcs
  */
 const every = (funcs = [], ...args) => {
   const { length } = funcs;
@@ -52,7 +52,7 @@ function off(when) {
 }
 
 /**
- * Dynamically buiilding the body of the handler.
+ * Dynamically building the body of the handler.
  * Building this optimized function lead to 100x performance improvement
  * against an already defined handler with if statements.
  * This function will composed only the actually used hooks.

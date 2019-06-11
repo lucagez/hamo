@@ -10,7 +10,7 @@
     "lint": "eslint src/*.js",
     "lint:fix": "eslint --fix src/*.js",
     "scratch": "nodemon scratch/test.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava test/**"
   },
   "keywords": [],
   "author": "",
