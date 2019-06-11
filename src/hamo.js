@@ -112,6 +112,9 @@ function build() {
     if (onceafter) {
       body += 'this.every(this.queues.onceafter, result, ...arguments);';
       body += 'this.queues.onceafter = undefined;';
+
+      // Thinking about auto rebuilding function after `once` execution.
+      // body += 'this.handler = this.build();';
     }
     if (after) {
       body += 'this.every(this.queues.after, result, ...arguments);';
