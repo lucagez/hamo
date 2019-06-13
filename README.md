@@ -15,6 +15,20 @@ When no hooks are attached to the hooked function, the original function is used
 To invoke the `after` hooks **really** after the hooked function has already returned,
 a micro-task is scheduled by running the hooks inside an already resolved promise.
 
+# TOC
+  * [Installation](#installation)
+  * [Usage](#usage)
+    * [Getting started](#getting-started)
+    * [Possible hooks](#possible-hooks)
+    * [Define a hook](#define-a-hook)
+    * [Before and oncebefore](#before-and-oncebefore)
+    * [After and onceafter](#after-and-onceafter)
+    * [Detach hook](#detach-hook)
+    * [Hooking async functions](#hooking-async-functions)
+  * [Benchmarks](#benchmarks)
+  * [Test](#test)
+  * [License](#license)
+
 
 # Installation
 
@@ -55,7 +69,7 @@ const [sum] = hamo((a, b) => a + b);
 sum(1, 2); // 3
 ```
 
-# Possible hooks
+## Possible hooks
 
 The existent hooks are:
 - `before`
