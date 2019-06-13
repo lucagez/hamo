@@ -1,7 +1,7 @@
 {
   "name": "hamo",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.3.0",
+  "description": "Zero overhead hooks",
   "main": "dist/hamo.js",
   "scripts": {
     "build:node": "uglifyjs --compress --mangle -- src/hamo.js > dist/hamo.js && gzip-size dist/hamo.js",
@@ -13,8 +13,8 @@
     "test": "npm run build && ava test/**"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "luca gesmundo <lucagesmundo@yahoo.it>",
+  "license": "MIT",
   "devDependencies": {
     "ava": "^2.1.0",
     "benchmark": "^2.1.4",
