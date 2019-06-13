@@ -2,6 +2,12 @@
 > Hāmo, from latin: `hooked`. 
 > ZERO overhead hooks.
 
+<p>
+  <a href="https://travis-ci.org/lucagez/hamo.svg?branch=master"><img src="https://travis-ci.org/lucagez/hamo.svg?branch=master" alt="travis"></a>
+  <a href="https://www.npmjs.org/package/hamo"><img src="https://img.shields.io/npm/v/hamo.svg?style=flat" alt="npm"></a>
+  <img src="https://img.shields.io/badge/license-MIT-f1c40f.svg" alt="MIT">
+</p>
+
 # Synopsis
 `Hamo` provides a handy interface for attaching `before / after / once` hooks to any function without zero overhead.
 Fully compatible with both Node and the browser.
