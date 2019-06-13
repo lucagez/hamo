@@ -1,4 +1,4 @@
-# Hamo
+# 🎣 Hamo
 > Hāmo, from latin: `hooked`. 
 > ZERO overhead hooks.
 
