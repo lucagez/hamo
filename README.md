@@ -145,6 +145,25 @@ sum(1, 2);
 
 ```
 
+## Multiple hooks
+
+Multiple hooks of the same type can be defined.
+Every hook of the same type will be executed with the same set of argument.
+
+```javascript
+const [sum, onSum] = hamo((a, b) => a + b);
+
+onSum('before', () => console.log('Called before than the next before!'));
+onSum('before', () => console.log('Called before than the func!'));
+
+sum(1, 2);
+
+// Called before than the next before
+// Called before than the func
+// 3
+
+```
+
 ## Detach hook
 
 A previously defned hook is detachable by invoking the `off` function with the `hookString` argument
@@ -173,7 +192,30 @@ sum(1, 2);
 ## Hooking async functions
 
 It's possible to hook async functions.
-Example of hoking `fs`.
+
+
+```javascript
+const sleepFunc = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// Specify the async flag
+const [sleep, onSleep] = hamo(sleepFunc, true);
+
+onSleep('after', (ms) => console.log(`Just slept for ${ms}ms`));
+
+(async () => {
+  await sleep(1000);
+})();
+
+// ( sleeping )
+// Just slept for 1000ms
+
+```
+
+# Real World Examples
+
+## Hooking `fs`
+
+Example of hooking `fs`.
 
 
 ```javascript
@@ -189,6 +231,32 @@ read('./test.txt', 'utf-8');
 
 // ... test.txt ...
 // Finished reading from ./test.txt
+
+```
+
+# Hooking React components
+
+Example of hooking a React component and logging on different rendering stages.
+
+```jsx
+const HelloComponent = ({ who }) => {
+  console.log('Rendering component');
+  
+  return <h1>Hello {who}</h1>;
+};
+
+const [Hello, onHello] = hamo(HelloComponent);
+
+onHello('before', ({ who }) => console.log(`Rendering hello component with prop ${who}`));
+
+onHello('after', () => console.log('Rendered hello component'));
+
+React.render(<Hello who="world" />, '#App');
+
+// Rendering hello component with prop world
+// Rendering component
+// ( Now the component is rendered in the dom )
+// Rendered hello component
 
 ```
 
