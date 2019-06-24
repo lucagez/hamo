@@ -1,8 +1,10 @@
 {
   "name": "hamo",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Zero overhead hooks",
+  "source": "src/hamo.js",
   "main": "dist/hamo.js",
+  "unpkg": "dist/hamo.umd.js",
   "scripts": {
     "build:node": "uglifyjs --compress --mangle -- src/hamo.js > dist/hamo.js && gzip-size dist/hamo.js",
     "build:web": "microbundle src/hamo.js --target web --no-sourcemap --format umd",
