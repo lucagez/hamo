@@ -4,9 +4,15 @@
 
 <p>
   <a href="https://travis-ci.org/lucagez/hamo.svg?branch=master"><img src="https://travis-ci.org/lucagez/hamo.svg?branch=master" alt="travis"></a>
-  <a href="https://www.npmjs.org/package/hamo"><img src="https://img.shields.io/npm/v/hamo.svg?style=flat" alt="npm"></a>
   <img src="https://img.shields.io/badge/license-MIT-f1c40f.svg" alt="MIT">
 </p>
+
+# Deprecation
+
+> 🚨 This repo is archived 🚨
+
+Ownership of the npm namespace for `hamo` has been transferred to [clementroche](https://github.com/clementroche) who is building amazing packages. Peace ✌️
+
 
 # Synopsis
 `Hamo` provides a handy interface for attaching `before / after / once` hooks to any function without zero overhead.
